@@ -4,8 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Usuario/AndroidStudioProjects/ParouDeSeguir/app/src/main/res/layout/activity_home.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Usuario/AndroidStudioProjects/ParouDeSeguir/app/src/main/res/layout/activity_list.xml" value="0.36102564102564105" />
         <entry key="..\:/Users/Usuario/AndroidStudioProjects/ParouDeSeguir/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/Usuario/AndroidStudioProjects/ParouDeSeguir/app/src/main/res/layout/activity_user.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Usuario/AndroidStudioProjects/ParouDeSeguir/app/src/main/res/layout/activity_user.xml" value="0.2982456140350877" />
+        <entry key="..\:/Users/Usuario/AndroidStudioProjects/ParouDeSeguir/app/src/main/res/layout/adapter_user.xml" value="0.35260416666666666" />
+        <entry key="..\:/Users/Usuario/AndroidStudioProjects/ParouDeSeguir/app/src/main/res/layout/fragment_user_detail.xml" value="0.2433559145388223" />
       </map>
     </option>
   </component>

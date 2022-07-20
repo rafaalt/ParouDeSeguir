@@ -1,10 +1,7 @@
-package pack.rafaalt.app.paroudeseguir;
-
-import android.media.audiofx.Equalizer;
+package pack.rafaalt.app.paroudeseguir.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class ContaPrincipal implements Serializable {
     private long id;

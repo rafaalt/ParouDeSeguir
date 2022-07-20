@@ -1,4 +1,4 @@
-package pack.rafaalt.app.paroudeseguir;
+package pack.rafaalt.app.paroudeseguir.model;
 
 
 /**

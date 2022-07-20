@@ -1,7 +1,6 @@
-package pack.rafaalt.app.paroudeseguir;
+package pack.rafaalt.app.paroudeseguir.model;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 public class Conta implements Serializable {
     private String username;
@@ -47,7 +46,7 @@ public class Conta implements Serializable {
     @Override
     public boolean equals(Object o) {
         Conta conta = (Conta) o;
-        if(this.id == conta.getId())
+        if(this.username.equals(conta.getUsername()))
             return true;
         else
             return false;

@@ -2,14 +2,11 @@ package pack.rafaalt.app.paroudeseguir;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,40 +14,38 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import pack.rafaalt.app.paroudeseguir.model.Conta;
+import pack.rafaalt.app.paroudeseguir.model.ContaPrincipal;
 
 
 public class HomeActivity extends AppCompatActivity {
     ContaPrincipal conta;
-
+    int iteracoes = 0;
+    int erros = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
         Button btnExecutar = findViewById(R.id.btnExecute);
-        Button btnExecutar2 = findViewById(R.id.btnExecute2);
         EditText txtUsername = findViewById(R.id.txtUsername);
 
         btnExecutar.setOnClickListener(view -> {
-            //searchUser(txtUsername.getText().toString());
-            //txtUsername.setText(viewModel.getConta().getNomeCompleto());
+            searchUser(txtUsername.getText().toString());
         });
 
     }
-
     public void searchUser(String username) {
-                ProgressBar progressBar = findViewById(R.id.progressBar);
+        ProgressBar progressBar = findViewById(R.id.progressBar);
                 progressBar.setVisibility(View.VISIBLE);
                         String url = "https://instagram-scraper-2022.p.rapidapi.com/ig/info_username/?user=" + username;
                         OkHttpClient cliente = new OkHttpClient();
@@ -64,6 +59,8 @@ public class HomeActivity extends AppCompatActivity {
                             @Override
                             public void onFailure(Call call, IOException e) {
                                 Log.e("WebService", "Erro SearchUser");
+                                Toast.makeText(HomeActivity.this, "tente novamente", Toast.LENGTH_SHORT).show();
+                                progressBar.setVisibility(View.INVISIBLE);
                             }
 
                             @Override
@@ -89,19 +86,199 @@ public class HomeActivity extends AppCompatActivity {
                                                 int qtSeguindo = user.getInt("following_count");
                                                 int qtMedia = user.getInt("media_count");
                                                 conta = new ContaPrincipal(id, usernameRet, nomeCompleto, iconUrl, isPrivate, isVerified, biography, qtSeguidores, qtSeguindo, qtMedia);
-                                                TextView txt = findViewById(R.id.txt);
-                                                txt.setText(conta.getNomeCompleto() + ", id: " + conta.getId() + "\n");
-                                                Intent intent = new Intent(HomeActivity.this, UserActivity.class);
-                                                intent.putExtra("conta", conta);
-                                                startActivity(intent);
+                                                TextView txtA = findViewById(R.id.home_txtA);
+                                                TextView txtB = findViewById(R.id.home_txtB);
+                                                txtA.setText(conta.getNomeCompleto() + ", id: " + conta.getId() + "\n");
+                                                txtB.setText("Iteracoes" + iteracoes + "\n");
+                                                iteracoes++;
+                                                getFollowers(id, "0");
+                                                //getFollowerAux();
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
                                         }
                                     });
                                 }
-                                progressBar.setVisibility(View.INVISIBLE);
                             }
                         });
                     }
+
+    public void getFollowers(Long id, String nextId) {
+        ProgressBar progressBar = findViewById(R.id.progressBar);
+        String url = "";
+        if (nextId.equals("0"))
+            url = "https://instagram-scraper-2022.p.rapidapi.com/ig/followers/?id_user=" + id;
+        else
+            url = "https://instagram-scraper-2022.p.rapidapi.com/ig/followers/?id_user=" + id + "&next_max_id=" + nextId;
+        OkHttpClient cliente = new OkHttpClient();
+        if (conta.getSeguidores().size() >= conta.getQtSeguidores()) {
+            getFollowing(id, "0");
+        } else {
+            Request request = new Request.Builder()
+                    .url(url)
+                    .get()
+                    .addHeader("X-RapidAPI-Key", "2295348d0fmshd44c2731982934ap1fd835jsnabb4c3092fec")
+                    .addHeader("X-RapidAPI-Host", "instagram-scraper-2022.p.rapidapi.com")
+                    .build();
+            cliente.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.e("WebService", "Erro Followers");
+                    erros++;
+                    if(erros < 6){
+                        getFollowers(id, "0");
+                    }
+                    else
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+
+                    if (response.isSuccessful()) {
+                        String resp = response.body().string();
+                        HomeActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    JSONObject jsonObject = new JSONObject(resp);
+                                    String userdata = jsonObject.getString("users");
+                                    Boolean bigList = jsonObject.getBoolean("big_list");
+                                    JSONArray jsonArray = new JSONArray(userdata);
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonUser = jsonArray.getJSONObject(i);
+                                        Long idU = jsonUser.getLong("pk");
+                                        String nomeCompleto = jsonUser.getString("full_name");
+                                        String iconUrl = jsonUser.getString("profile_pic_url");
+                                        String usernameRet = jsonUser.getString("username");
+                                        boolean isPrivate = jsonUser.getBoolean("is_private");
+                                        boolean isVerified = jsonUser.getBoolean("is_verified");
+                                        Conta seguidor = new Conta(usernameRet, nomeCompleto, iconUrl, isPrivate, isVerified, idU);
+                                        if(!conta.getSeguidores().contains(seguidor))
+                                            conta.adicionarSeguidor(seguidor);
+                                        }
+                                    TextView txtA = findViewById(R.id.home_txtA);
+                                    TextView txtB = findViewById(R.id.home_txtB);
+                                    txtA.setText(conta.getSeguidores().size() + "/" + conta.getQtSeguidores() +"\n");
+                                    txtB.setText("Seguidores: " + iteracoes + "\n");
+                                    iteracoes++;
+                                    String nextMaxId = "";
+                                    if(bigList){
+                                        nextMaxId = jsonObject.getString("next_max_id");
+                                        getFollowers(id, nextMaxId);
+                                    }
+                                    else{
+                                        getFollowers(id, "0");
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    }
+
+    public void getFollowing(Long id, String nextId) {
+        ProgressBar progressBar = findViewById(R.id.progressBar);
+        String url = "";
+        if (nextId.equals("0"))
+            url = "https://instagram-scraper-2022.p.rapidapi.com/ig/following/?id_user=" + id;
+        else
+            url = "https://instagram-scraper-2022.p.rapidapi.com/ig/following/?id_user=" + id + "&next_max_id=" + nextId;
+        OkHttpClient cliente = new OkHttpClient();
+        if (conta.getSeguindo().size() >= conta.getQtSeguindo()) {
+            progressBar.setVisibility(View.INVISIBLE);
+            Intent intent = new Intent(HomeActivity.this, UserActivity.class);
+            intent.putExtra("conta", conta);
+            startActivity(intent);
+        } else {
+            Request request = new Request.Builder()
+                    .url(url)
+                    .get()
+                    .addHeader("X-RapidAPI-Key", "2295348d0fmshd44c2731982934ap1fd835jsnabb4c3092fec")
+                    .addHeader("X-RapidAPI-Host", "instagram-scraper-2022.p.rapidapi.com")
+                    .build();
+            cliente.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.e("WebService", "Erro Following");
+                    erros++;
+                    if(erros < 8){
+                        getFollowing(id, "0");
+                    }
+                    else
+                        progressBar.setVisibility(View.INVISIBLE);
+                }
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+
+                    if (response.isSuccessful()) {
+                        String resp = response.body().string();
+                        HomeActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    JSONObject jsonObject = new JSONObject(resp);
+                                    String userdata = jsonObject.getString("users");
+                                    Boolean bigList = jsonObject.getBoolean("big_list");
+                                    JSONArray jsonArray = new JSONArray(userdata);
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonUser = jsonArray.getJSONObject(i);
+                                        Long idU = jsonUser.getLong("pk");
+                                        String nomeCompleto = jsonUser.getString("full_name");
+                                        String iconUrl = jsonUser.getString("profile_pic_url");
+                                        String usernameRet = jsonUser.getString("username");
+                                        boolean isPrivate = jsonUser.getBoolean("is_private");
+                                        boolean isVerified = jsonUser.getBoolean("is_verified");
+                                        Conta c = new Conta(usernameRet, nomeCompleto, iconUrl, isPrivate, isVerified, idU);
+                                        if(!conta.getSeguindo().contains(c))
+                                            conta.adicionarSeguindo(c);
+                                       }
+                                    TextView txtA = findViewById(R.id.home_txtA);
+                                    TextView txtB = findViewById(R.id.home_txtB);
+                                    txtA.setText(conta.getSeguindo().size() + "/" + conta.getQtSeguindo() +"\n");
+                                    txtB.setText("Seguindo: " + iteracoes + "\n");
+                                    iteracoes++;
+                                    String nextMaxId = "";
+                                    if(bigList){
+                                        nextMaxId = jsonObject.getString("next_max_id");
+                                        getFollowing(id, nextMaxId);
+                                    }
+                                    else{
+                                        getFollowing(id, "0");
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    }
+
+    public void getFollowingAux(){
+        ProgressBar progressBar = findViewById(R.id.progressBar);
+        for(int i = 0; i<conta.getQtSeguindo(); i++){
+            Random random = new Random();
+            Conta c = new Conta("user" + i*2, "Rafael" + i, "", true, false, random.nextInt(250));
+            conta.adicionarSeguindo(c);
+        }
+        progressBar.setVisibility(View.INVISIBLE);
+        Intent intent = new Intent(HomeActivity.this, UserActivity.class);
+        intent.putExtra("conta", conta);
+        startActivity(intent);
+    }
+
+    public void getFollowerAux(){
+        for(int i = 0; i<conta.getQtSeguidores(); i++){
+            Random random = new Random();
+            Conta c = new Conta("user" + i*2, "Rafael" + i, "", true, false, random.nextInt(250));
+            conta.adicionarSeguidor(c);
+        }
+        getFollowingAux();
+    }
 }

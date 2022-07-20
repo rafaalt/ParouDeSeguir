@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp"
+    tools:context=".UserAdapter">
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/adadpterFrameLayout">
+
+        <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/adadpterImagem"
+        android:src="@drawable/btn_info" />
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/adapterProgressBar"
+            android:layout_gravity="center"
+            android:visibility="invisible"/>
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Username"
+        android:textStyle="bold"
+        android:layout_toRightOf="@id/adadpterFrameLayout"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:textSize="20dp"
+        android:id="@+id/adapterUsername"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Username"
+        android:layout_toRightOf="@id/adadpterFrameLayout"
+        android:layout_marginLeft="15dp"
+        android:layout_below="@id/adapterUsername"
+        android:textSize="15dp"
+        android:id="@+id/adapterNomeCompleto"/>
+</RelativeLayout>
