@@ -1,16 +1,20 @@
 package pack.rafaalt.app.paroudeseguir;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.IOException;
 
@@ -52,7 +56,8 @@ public class UserActivity extends AppCompatActivity {
             TextView followers1 = findViewById(R.id.user_followers1);
             TextView following1 = findViewById(R.id.user_following1);
             Button btnNao = findViewById(R.id.user_btnNao);
-
+            BottomNavigationView bottomNav = findViewById(R.id.userMenu);
+            bottomNav.setSelectedItemId(R.id.bottomNav_Perfil);
 
             carregarFoto();
             txtUser.setText("@" + conta.getUsername());
@@ -60,11 +65,30 @@ public class UserActivity extends AppCompatActivity {
             followers1.setText(conta.getSeguidoresAtivos() + "");
             following1.setText(conta.getSeguindoAtivos() + "");
 
-            btnNao.setOnClickListener(view -> {
-                Intent intent1 = new Intent(UserActivity.this, ListActivity.class);
-                intent1.putExtra("conta", conta);
-                startActivity(intent1);
-            });
+        bottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.bottomNav_Perfil:
+                        return true;
+
+                    case R.id.bottomNav_NaoSegue:
+                        Intent intent1 = new Intent(UserActivity.this, ListActivity.class);
+                        intent1.putExtra("contas", conta.getNaoSegueVolta());
+                        intent1.putExtra("idAtual", R.id.bottomNav_NaoSegue);
+                        startActivity(intent1);
+                        return true;
+
+                    case R.id.bottomNav_Parou:
+                        Intent intent2 = new Intent(UserActivity.this, ListActivity.class);
+                        intent2.putExtra("contas", conta.getParouDeSeguir());
+                        intent2.putExtra("idAtual", R.id.bottomNav_Parou);
+                        startActivity(intent2);
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
     private Bitmap downloadImage(String imgLink) {
