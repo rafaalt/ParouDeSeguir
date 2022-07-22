@@ -27,6 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Username"
+        android:layout_marginTop="20dp"
         android:text=""
         android:id="@+id/txtUsername"/>
 
@@ -73,13 +74,13 @@
             android:layout_height="50dp"
             android:text="Bt1"
             android:id="@+id/home_btnInfo"
-            android:src="@drawable/btn_info"/>
+            android:src="@drawable/btninfo50"/>
         <ImageButton
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:text="Bt2"
             android:id="@+id/home_btnInsta"
-            android:src="@drawable/btn_insta"
+            android:src="@drawable/btninsta50"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
 

@@ -46,10 +46,22 @@ public class Conta implements Serializable {
     @Override
     public boolean equals(Object o) {
         Conta conta = (Conta) o;
-        if(this.username.equals(conta.getUsername()))
+        if(this.id == conta.getId())
             return true;
         else
             return false;
+    }
+
+    public int intVerified(){
+        int retorno = ( (this.isVerified) ? 1 : 0);
+
+        return retorno;
+    }
+
+    public int intPrivado(){
+        int retorno = ( (this.isPrivate) ? 1 : 0);
+
+        return retorno;
     }
 
     @Override

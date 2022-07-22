@@ -12,9 +12,13 @@ public class ContaPrincipal implements Serializable {
     private boolean isVerified;
     private String biography;
     private int qtSeguidores;
+    private int seguidoresAtivos;
+    private int seguindoAtivos;
     private int qtSeguindo;
     private int qtMedia;
     private ArrayList<Conta> naoSegueVolta;
+    private ArrayList<Conta> seguidoresAntigos;
+    private ArrayList<Conta> parouDeSeguir;
     private ArrayList<Conta> seguidores;
     private ArrayList<Conta> seguindo;
 
@@ -30,9 +34,13 @@ public class ContaPrincipal implements Serializable {
         this.qtSeguidores = qtSeguidores;
         this.qtSeguindo = qtSeguindo;
         this.qtMedia = qtMedia;
+        this.seguidoresAtivos = qtSeguidores;
+        this.seguindoAtivos = qtSeguindo;
         this.seguidores = new ArrayList<>();
         this.seguindo = new ArrayList<>();
         this.naoSegueVolta = new ArrayList<>();
+        this.seguidoresAntigos = new ArrayList<>();
+        this.parouDeSeguir = new ArrayList<>();
     }
     public Conta getUltimoSeguidor(){
         return this.seguidores.get(seguindo.size()-1);
@@ -52,6 +60,14 @@ public class ContaPrincipal implements Serializable {
         for(Conta x : this.seguindo){
             if (!this.seguidores.contains(x))
                 this.naoSegueVolta.add(x);
+        }
+    }
+
+    public void fazerVerificacoes(){
+        verificaNaoSegueVolta();
+        for(Conta x : this.seguidoresAntigos){
+            if(!this.seguidores.contains(x))
+                this.parouDeSeguir.add(x);
         }
     }
 
@@ -109,6 +125,58 @@ public class ContaPrincipal implements Serializable {
 
     public void setSeguidores(ArrayList<Conta> array){
         this.seguidores = array;
+    }
+
+    public boolean contarSeguidores(){
+        if(seguidoresAtivos <= seguidores.size())
+            return true;
+        return false;
+    }
+
+    public boolean contarSeguindo(){
+        if(seguindoAtivos <= seguindo.size())
+            return true;
+        return false;
+    }
+
+    public void setSeguidoresAtivos(int valor){
+        this.seguidoresAtivos = valor;
+    }
+
+    public void setSeguindoAtivos(int valor){
+        this.seguindoAtivos = valor;
+    }
+
+    public int getSeguidoresAtivos() {
+        return seguidoresAtivos;
+    }
+
+    public int getSeguindoAtivos() {
+        return seguindoAtivos;
+    }
+
+    public void setSeguindo(ArrayList<Conta> seguindo) {
+        this.seguindo = seguindo;
+    }
+
+    public void setNaoSegueVolta(ArrayList<Conta> naoSegueVolta) {
+        this.naoSegueVolta = naoSegueVolta;
+    }
+
+    public ArrayList<Conta> getSeguidoresAntigos() {
+        return seguidoresAntigos;
+    }
+
+    public void setSeguidoresAntigos(ArrayList<Conta> seguidoresAntigos) {
+        this.seguidoresAntigos = seguidoresAntigos;
+    }
+
+    public ArrayList<Conta> getParouDeSeguir() {
+        return parouDeSeguir;
+    }
+
+    public void setParouDeSeguir(ArrayList<Conta> parouDeSeguir) {
+        this.parouDeSeguir = parouDeSeguir;
     }
 }
 

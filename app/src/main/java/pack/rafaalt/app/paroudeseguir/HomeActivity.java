@@ -26,7 +26,7 @@ import okhttp3.Response;
 import pack.rafaalt.app.paroudeseguir.model.Conta;
 import pack.rafaalt.app.paroudeseguir.model.ContaPrincipal;
 
-
+//1698663381
 public class HomeActivity extends AppCompatActivity {
     ContaPrincipal conta;
     int iteracoes = 0;
@@ -88,8 +88,8 @@ public class HomeActivity extends AppCompatActivity {
                                                 conta = new ContaPrincipal(id, usernameRet, nomeCompleto, iconUrl, isPrivate, isVerified, biography, qtSeguidores, qtSeguindo, qtMedia);
                                                 TextView txtA = findViewById(R.id.home_txtA);
                                                 TextView txtB = findViewById(R.id.home_txtB);
-                                                txtA.setText(conta.getNomeCompleto() + ", id: " + conta.getId() + "\n");
-                                                txtB.setText("Iteracoes" + iteracoes + "\n");
+                                                txtA.setText(conta.getUsername() + ", id: " + conta.getId() + "\n");
+                                                //txtB.setText("Iteracoes" + iteracoes + "\n");
                                                 iteracoes++;
                                                 getFollowers(id, "0");
                                                 //getFollowerAux();
@@ -111,7 +111,7 @@ public class HomeActivity extends AppCompatActivity {
         else
             url = "https://instagram-scraper-2022.p.rapidapi.com/ig/followers/?id_user=" + id + "&next_max_id=" + nextId;
         OkHttpClient cliente = new OkHttpClient();
-        if (conta.getSeguidores().size() >= conta.getQtSeguidores()) {
+        if (conta.contarSeguidores()) {
             getFollowing(id, "0");
         } else {
             Request request = new Request.Builder()
@@ -158,15 +158,18 @@ public class HomeActivity extends AppCompatActivity {
                                         }
                                     TextView txtA = findViewById(R.id.home_txtA);
                                     TextView txtB = findViewById(R.id.home_txtB);
-                                    txtA.setText(conta.getSeguidores().size() + "/" + conta.getQtSeguidores() +"\n");
-                                    txtB.setText("Seguidores: " + iteracoes + "\n");
+                                    txtA.setText(conta.getSeguidores().size() + "/" + conta.getQtSeguidores() + "-" + conta.getSeguidoresAtivos() + "\n" );
+                                    //txtB.setText("Seguidores: " + iteracoes + "\n");
                                     iteracoes++;
                                     String nextMaxId = "";
                                     if(bigList){
                                         nextMaxId = jsonObject.getString("next_max_id");
                                         getFollowers(id, nextMaxId);
+                                        //getFollowerAux();
                                     }
                                     else{
+                                        int segAtivos = Integer.parseInt(nextId) + jsonArray.length();
+                                        conta.setSeguidoresAtivos(segAtivos);
                                         getFollowers(id, "0");
                                     }
                                 } catch (JSONException e) {
@@ -181,6 +184,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void getFollowing(Long id, String nextId) {
+        //conta.setSeguindo(conta.getSeguidores());
         ProgressBar progressBar = findViewById(R.id.progressBar);
         String url = "";
         if (nextId.equals("0"))
@@ -188,7 +192,7 @@ public class HomeActivity extends AppCompatActivity {
         else
             url = "https://instagram-scraper-2022.p.rapidapi.com/ig/following/?id_user=" + id + "&next_max_id=" + nextId;
         OkHttpClient cliente = new OkHttpClient();
-        if (conta.getSeguindo().size() >= conta.getQtSeguindo()) {
+        if (conta.contarSeguindo()) {
             progressBar.setVisibility(View.INVISIBLE);
             Intent intent = new Intent(HomeActivity.this, UserActivity.class);
             intent.putExtra("conta", conta);
@@ -238,15 +242,18 @@ public class HomeActivity extends AppCompatActivity {
                                        }
                                     TextView txtA = findViewById(R.id.home_txtA);
                                     TextView txtB = findViewById(R.id.home_txtB);
-                                    txtA.setText(conta.getSeguindo().size() + "/" + conta.getQtSeguindo() +"\n");
+                                    txtA.setText(conta.getSeguindo().size() + "/" + conta.getQtSeguindo() + "-" + conta.getSeguindoAtivos() + "\n");
                                     txtB.setText("Seguindo: " + iteracoes + "\n");
                                     iteracoes++;
                                     String nextMaxId = "";
                                     if(bigList){
                                         nextMaxId = jsonObject.getString("next_max_id");
                                         getFollowing(id, nextMaxId);
+                                        //getFollowingAux();
                                     }
                                     else{
+                                        int segAtivos = Integer.parseInt(nextId) + jsonArray.length();
+                                        conta.setSeguindoAtivos(segAtivos);
                                         getFollowing(id, "0");
                                     }
                                 } catch (JSONException e) {

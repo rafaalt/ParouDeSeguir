@@ -18,10 +18,10 @@ public class ListActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         ContaPrincipal conta = (ContaPrincipal) intent.getSerializableExtra("conta");
-        conta.verificaNaoSegueVolta();
+        //conta.verificaNaoSegueVolta();
 
         ListView lista = this.findViewById(R.id.listActivity);
-        UserAdapter userAdapter = new UserAdapter(conta.getNaoSegueVolta() ,this);
+        UserAdapter userAdapter = new UserAdapter(conta.getNaoSegueVolta(),this);
         lista.setAdapter(userAdapter);
     }
 }
