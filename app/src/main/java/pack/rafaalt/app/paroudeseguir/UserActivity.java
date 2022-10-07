@@ -55,7 +55,6 @@ public class UserActivity extends AppCompatActivity {
             TextView txtNome = findViewById(R.id.user_txtNomeCompleto);
             TextView followers1 = findViewById(R.id.user_followers1);
             TextView following1 = findViewById(R.id.user_following1);
-            Button btnNao = findViewById(R.id.user_btnNao);
             BottomNavigationView bottomNav = findViewById(R.id.userMenu);
             bottomNav.setSelectedItemId(R.id.bottomNav_Perfil);
 
@@ -65,6 +64,7 @@ public class UserActivity extends AppCompatActivity {
             followers1.setText(conta.getSeguidoresAtivos() + "");
             following1.setText(conta.getSeguindoAtivos() + "");
 
+            //TabView Menu
         bottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -73,14 +73,14 @@ public class UserActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.bottomNav_NaoSegue:
-                        Intent intent1 = new Intent(UserActivity.this, ListActivity.class);
-                        intent1.putExtra("contas", conta.getNaoSegueVolta());
+                        Intent intent1 = new Intent(UserActivity.this, NaoSegueActivity.class);
+                        intent1.putExtra("conta", conta);
                         intent1.putExtra("idAtual", R.id.bottomNav_NaoSegue);
                         startActivity(intent1);
                         return true;
 
                     case R.id.bottomNav_Parou:
-                        Intent intent2 = new Intent(UserActivity.this, ListActivity.class);
+                        Intent intent2 = new Intent(UserActivity.this, NaoSegueActivity.class);
                         intent2.putExtra("contas", conta.getParouDeSeguir());
                         intent2.putExtra("idAtual", R.id.bottomNav_Parou);
                         startActivity(intent2);

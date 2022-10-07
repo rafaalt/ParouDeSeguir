@@ -55,7 +55,7 @@ public class UserAdapter extends BaseAdapter {
         View retorno = LayoutInflater.from(this.context).inflate(R.layout.adapter_user, viewGroup, false);
         TextView username = retorno.findViewById(R.id.adapterUsername);
         TextView nomeCompleto = retorno.findViewById(R.id.adapterNomeCompleto);
-        ImageView fotoPerfil = retorno.findViewById(R.id.adadpterImagem);
+        //ImageView fotoPerfil = retorno.findViewById(R.id.adadpterImagem);
         username.setText(contaAtual.getUsername());
         nomeCompleto.setText(contaAtual.getNomeCompleto());
         ProgressBar barraProgresso = retorno.findViewById(R.id.adapterProgressBar);

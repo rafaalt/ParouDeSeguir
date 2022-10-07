@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class ParouDB extends SQLiteOpenHelper {
 
-    public static final String DB_NAME = "PAROU_DB";
+    public static final String DB_NAME = "PAROU_DB_V2";
     public static final int DB_VERSION = 1;
 
     public static final String ID_COLUMN = "id";

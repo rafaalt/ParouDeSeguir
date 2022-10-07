@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".NaoSegueActivity">
+    tools:context=".ParouSeguirActivity">
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/listActivity"
+        android:id="@+id/listActivity2"
         android:clickable="true"
         tools:listitem="@layout/adapter_user"
-        android:layout_above="@id/userMenu"/>
+        android:layout_above="@id/userMenu2"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
@@ -22,7 +22,6 @@
         app:itemBackground="@color/black"
         app:itemIconTint="@color/purple_200"
         app:itemTextColor="@color/purple_200"
-        android:id="@+id/userMenu"
+        android:id="@+id/userMenu2"
         app:menu="@menu/bottomnav"/>
-
 </RelativeLayout>

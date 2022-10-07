@@ -12,10 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ParouDeSeguir">
         <activity
+            android:name=".ParouSeguirActivity"
+            android:exported="false" />
+        <activity
             android:name=".UserAdapter"
             android:exported="false" />
         <activity
-            android:name=".ListActivity"
+            android:name=".NaoSegueActivity"
             android:exported="false" />
         <activity
             android:name=".UserActivity"

@@ -58,16 +58,20 @@ public class ContaPrincipal implements Serializable {
 
     public void verificaNaoSegueVolta(){
         for(Conta x : this.seguindo){
-            if (!this.seguidores.contains(x))
-                this.naoSegueVolta.add(x);
+            if (!this.seguidores.contains(x)) {
+                if (!this.naoSegueVolta.contains(x))
+                    this.naoSegueVolta.add(x);
+            }
         }
     }
 
     public void fazerVerificacoes(){
         verificaNaoSegueVolta();
         for(Conta x : this.seguidoresAntigos){
-            if(!this.seguidores.contains(x))
-                this.parouDeSeguir.add(x);
+            if(!this.seguidores.contains(x)) {
+                if (!this.parouDeSeguir.contains(x))
+                    this.parouDeSeguir.add(x);
+            }
         }
     }
 
